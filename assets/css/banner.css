@@ -1,0 +1,420 @@
+:root {
+	--ravn-primary: #1a7f5a;
+	--ravn-text: #1f2937;
+	--ravn-muted: #6b7280;
+	--ravn-bg: #ffffff;
+	--ravn-border: #e5e7eb;
+	--ravn-radius: 12px;
+}
+
+#ravn-root, #ravn-root * {
+	box-sizing: border-box;
+}
+
+#ravn-root {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--ravn-text);
+}
+
+/* Banner */
+.ravn-banner {
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 999999;
+	background: var(--ravn-bg);
+	border-top: 1px solid var(--ravn-border);
+	box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+	padding: 20px 24px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+	transform: translateY(110%);
+	transition: transform 0.35s ease;
+}
+
+.ravn-banner.ravn-position-top {
+	top: 0;
+	bottom: auto;
+	border-top: none;
+	border-bottom: 1px solid var(--ravn-border);
+	box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+	transform: translateY(-110%);
+}
+
+.ravn-banner.ravn-position-bottom {
+	bottom: 0;
+}
+
+.ravn-banner-wrapper.ravn-visible .ravn-banner {
+	transform: translateY(0);
+}
+
+/* Gecentreerde popup/modal-variant, met verduisterde achtergrond */
+.ravn-banner-wrapper--modal {
+	position: fixed;
+	inset: 0;
+	z-index: 999999;
+	background: rgba(17, 24, 39, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.25s ease;
+}
+
+.ravn-banner-wrapper--modal.ravn-visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.ravn-banner.ravn-position-modal {
+	position: static;
+	inset: auto;
+	max-width: 460px;
+	width: 100%;
+	border: none;
+	border-radius: var(--ravn-radius);
+	box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+	transform: scale(0.96);
+	opacity: 0;
+	transition: transform 0.25s ease, opacity 0.25s ease;
+	flex-direction: column;
+	align-items: stretch;
+	text-align: center;
+}
+
+.ravn-banner-wrapper--modal.ravn-visible .ravn-banner.ravn-position-modal {
+	transform: scale(1);
+	opacity: 1;
+}
+
+.ravn-banner.ravn-position-modal .ravn-banner__actions {
+	flex-direction: column;
+	width: 100%;
+}
+
+.ravn-banner.ravn-position-modal .ravn-btn {
+	width: 100%;
+}
+
+.ravn-banner__text {
+	flex: 1 1 380px;
+	color: var(--ravn-text);
+	margin: 0;
+}
+
+.ravn-banner__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	flex: 0 0 auto;
+}
+
+.ravn-btn {
+	appearance: none;
+	border: 1px solid var(--ravn-border);
+	background: #fff;
+	color: var(--ravn-text);
+	padding: 10px 18px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.ravn-btn:hover {
+	border-color: var(--ravn-primary);
+}
+
+.ravn-btn--primary {
+	background: var(--ravn-primary);
+	border-color: var(--ravn-primary);
+	color: #fff;
+}
+
+.ravn-btn--primary:hover {
+	filter: brightness(0.92);
+}
+
+/* "Weigeren" krijgt bewust hetzelfde gewicht (vulling, grootte, contrast) als
+   "Accepteren" - de AP eist dat weigeren even makkelijk/zichtbaar is als accepteren. */
+.ravn-btn--reject {
+	background: var(--ravn-text);
+	border-color: var(--ravn-text);
+	color: #fff;
+}
+
+.ravn-btn--reject:hover {
+	filter: brightness(1.15);
+}
+
+.ravn-btn--text {
+	border-color: transparent;
+	background: transparent;
+	text-decoration: underline;
+	font-weight: 500;
+}
+
+/* Overlay + modal voor voorkeuren */
+.ravn-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(17, 24, 39, 0.5);
+	z-index: 1000000;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+}
+
+.ravn-overlay.ravn-visible {
+	display: flex;
+}
+
+.ravn-modal {
+	background: var(--ravn-bg);
+	border-radius: var(--ravn-radius);
+	max-width: 560px;
+	width: 100%;
+	max-height: 85vh;
+	overflow-y: auto;
+	padding: 24px;
+}
+
+.ravn-modal__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+
+.ravn-modal__header h2 {
+	font-size: 18px;
+	margin: 0;
+}
+
+.ravn-modal__close {
+	background: none;
+	border: none;
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+	color: var(--ravn-muted);
+}
+
+.ravn-category {
+	border: 1px solid var(--ravn-border);
+	border-radius: 10px;
+	padding: 14px 16px;
+	margin-top: 12px;
+}
+
+.ravn-category__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.ravn-category__title {
+	font-weight: 600;
+}
+
+.ravn-category__desc {
+	color: var(--ravn-muted);
+	margin: 4px 0 0;
+}
+
+.ravn-switch {
+	position: relative;
+	display: inline-block;
+	width: 40px;
+	height: 22px;
+	flex: 0 0 auto;
+}
+
+.ravn-switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.ravn-switch__track {
+	position: absolute;
+	inset: 0;
+	background: #d1d5db;
+	border-radius: 999px;
+	transition: background 0.2s ease;
+	cursor: pointer;
+}
+
+.ravn-switch__track::before {
+	content: "";
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	left: 2px;
+	top: 2px;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform 0.2s ease;
+}
+
+.ravn-switch input:checked + .ravn-switch__track {
+	background: var(--ravn-primary);
+}
+
+.ravn-switch input:checked + .ravn-switch__track::before {
+	transform: translateX(18px);
+}
+
+.ravn-switch input:disabled + .ravn-switch__track {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.ravn-cookie-list {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px dashed var(--ravn-border);
+}
+
+.ravn-cookie-list__item {
+	font-size: 12.5px;
+	color: var(--ravn-muted);
+	padding: 4px 0;
+}
+
+.ravn-cookie-list__item strong {
+	color: var(--ravn-text);
+}
+
+.ravn-modal__footer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+	.ravn-banner {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	.ravn-banner__actions {
+		justify-content: stretch;
+	}
+	.ravn-banner__actions .ravn-btn {
+		flex: 1 1 auto;
+	}
+}
+
+/* Permanente, kleine knop zodat toestemming altijd even makkelijk aan te
+   passen is als hij gegeven is - blijft staan nadat de banner is gesloten. */
+.ravn-reopen {
+	position: fixed;
+	left: 16px;
+	bottom: 16px;
+	z-index: 999998;
+	background: var(--ravn-bg);
+	color: var(--ravn-text);
+	border: 1px solid var(--ravn-border);
+	border-radius: 999px;
+	padding: 8px 14px;
+	font-size: 12.5px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+
+.ravn-reopen:hover {
+	border-color: var(--ravn-primary);
+}
+
+@media (max-width: 600px) {
+	.ravn-reopen {
+		left: 10px;
+		bottom: 10px;
+		padding: 7px 12px;
+		font-size: 12px;
+	}
+}
+
+/* Cookieverklaring-shortcode [ravn_cookieverklaring] */
+.ravn-declaration {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	color: var(--ravn-text);
+}
+
+.ravn-declaration__category {
+	margin-bottom: 28px;
+}
+
+.ravn-declaration__category h3 {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 4px;
+}
+
+.ravn-declaration__desc {
+	color: var(--ravn-muted);
+	margin: 0 0 12px;
+}
+
+.ravn-declaration__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13.5px;
+}
+
+.ravn-declaration__table th,
+.ravn-declaration__table td {
+	text-align: left;
+	padding: 8px 10px;
+	border-bottom: 1px solid var(--ravn-border);
+	vertical-align: top;
+}
+
+.ravn-declaration__table th {
+	color: var(--ravn-muted);
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+}
+
+.ravn-declaration__footer {
+	margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+	.ravn-declaration__table thead {
+		display: none;
+	}
+	.ravn-declaration__table, .ravn-declaration__table tbody, .ravn-declaration__table tr, .ravn-declaration__table td {
+		display: block;
+		width: 100%;
+	}
+	.ravn-declaration__table tr {
+		border-bottom: 1px solid var(--ravn-border);
+		padding: 8px 0;
+	}
+	.ravn-declaration__table td {
+		border-bottom: none;
+		padding: 3px 0;
+	}
+	.ravn-declaration__table td::before {
+		content: attr(data-label) ": ";
+		font-weight: 600;
+		color: var(--ravn-muted);
+	}
+}
