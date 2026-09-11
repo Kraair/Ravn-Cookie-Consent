@@ -1,8 +1,9 @@
 # Ravn Cookie Consent
 
-⚠️ **Nog in ontwikkeling.** Deze plugin is niet af en niet getest voor productiegebruik. Gebruik op
-een live site is op eigen risico; instellingen, database-structuur en functienamen kunnen nog
-wijzigen zonder migratiepad.
+> [!WARNING]
+> **Nog in ontwikkeling.** Deze plugin is niet af en niet getest voor productiegebruik. Gebruik op
+> een live site is op eigen risico; instellingen, database-structuur en functienamen kunnen nog
+> wijzigen zonder migratiepad.
 
 Cookiemeldingsplugin voor WordPress, gericht op AVG-conforme toestemming voor Nederlandse
 websites. Toont een cookiebanner met categorieën, houdt een cookieregister bij en integreert met
