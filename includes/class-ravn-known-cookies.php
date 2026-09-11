@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * voorkomen op Nederlandse WordPress-sites. Bij twijfel blijft een cookie
  * "onbekend" en moet de gebruiker hem zelf indelen.
  */
-class RAVN_Known_Cookies {
+class RAVN_CC_Known_Cookies {
 
 	/**
 	 * Cookienaam-patronen. Sleutel mag eindigen op '*' voor prefix-match

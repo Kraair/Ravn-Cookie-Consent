@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class RAVN_Admin {
+class RAVN_CC_Admin {
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
@@ -22,7 +22,7 @@ class RAVN_Admin {
 	}
 
 	public function add_menu() {
-		$new_count = RAVN_DB::count_new_detected_cookies();
+		$new_count = RAVN_CC_DB::count_new_detected_cookies();
 		$badge     = $new_count > 0 ? ' <span class="ravn-menu-badge">' . intval( $new_count ) . '</span>' : '';
 
 		add_menu_page(
@@ -40,7 +40,7 @@ class RAVN_Admin {
 		if ( strpos( $hook, 'ravn-settings' ) === false ) {
 			return;
 		}
-		wp_enqueue_style( 'ravn-admin', RAVN_PLUGIN_URL . 'assets/css/admin.css', array(), RAVN_VERSION );
+		wp_enqueue_style( 'ravn-admin', RAVN_CC_PLUGIN_URL . 'assets/css/admin.css', array(), RAVN_CC_VERSION );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class RAVN_Admin {
 
 		$id      = isset( $_POST['category_id'] ) ? absint( $_POST['category_id'] ) : 0;
 		$enabled = isset( $_POST['enabled'] ) ? absint( $_POST['enabled'] ) : 0;
-		RAVN_DB::toggle_category( $id, $enabled );
+		RAVN_CC_DB::toggle_category( $id, $enabled );
 
 		wp_safe_redirect( admin_url( 'admin.php?page=ravn-settings&tab=categories&updated=1' ) );
 		exit;
@@ -79,9 +79,9 @@ class RAVN_Admin {
 		);
 
 		if ( $id > 0 ) {
-			RAVN_DB::update_cookie( $id, $data );
+			RAVN_CC_DB::update_cookie( $id, $data );
 		} else {
-			RAVN_DB::insert_cookie( $data );
+			RAVN_CC_DB::insert_cookie( $data );
 		}
 
 		wp_safe_redirect( admin_url( 'admin.php?page=ravn-settings&tab=cookies&updated=1' ) );
@@ -95,7 +95,7 @@ class RAVN_Admin {
 		check_admin_referer( 'ravn_delete_cookie' );
 
 		$id = isset( $_GET['cookie_id'] ) ? absint( $_GET['cookie_id'] ) : 0;
-		RAVN_DB::delete_cookie( $id );
+		RAVN_CC_DB::delete_cookie( $id );
 
 		wp_safe_redirect( admin_url( 'admin.php?page=ravn-settings&tab=cookies&deleted=1' ) );
 		exit;
@@ -132,7 +132,7 @@ class RAVN_Admin {
 		}
 		check_admin_referer( 'ravn_save_integrations' );
 
-		$valid_categories = wp_list_pluck( RAVN_DB::get_categories(), 'slug' );
+		$valid_categories = wp_list_pluck( RAVN_CC_DB::get_categories(), 'slug' );
 
 		$sanitize_category = function ( $value ) use ( $valid_categories ) {
 			$value = sanitize_key( $value );
@@ -164,9 +164,9 @@ class RAVN_Admin {
 		}
 		check_admin_referer( 'ravn_run_scan' );
 
-		require_once RAVN_PLUGIN_DIR . 'includes/class-ravn-known-cookies.php';
-		require_once RAVN_PLUGIN_DIR . 'includes/class-ravn-scanner.php';
-		$found = RAVN_Scanner::run_manual_scan();
+		require_once RAVN_CC_PLUGIN_DIR . 'includes/class-ravn-known-cookies.php';
+		require_once RAVN_CC_PLUGIN_DIR . 'includes/class-ravn-scanner.php';
+		$found = RAVN_CC_Scanner::run_manual_scan();
 
 		wp_safe_redirect( admin_url( 'admin.php?page=ravn-settings&tab=scan&scanned=' . intval( $found ) ) );
 		exit;
@@ -200,23 +200,23 @@ class RAVN_Admin {
 		}
 		check_admin_referer( 'ravn_add_detected_cookie' );
 
-		require_once RAVN_PLUGIN_DIR . 'includes/class-ravn-known-cookies.php';
+		require_once RAVN_CC_PLUGIN_DIR . 'includes/class-ravn-known-cookies.php';
 
 		$id = isset( $_POST['detected_id'] ) ? absint( $_POST['detected_id'] ) : 0;
-		$detected = RAVN_DB::get_detected_cookie( $id );
+		$detected = RAVN_CC_DB::get_detected_cookie( $id );
 		if ( ! $detected ) {
 			wp_die( 'Onbekende gedetecteerde cookie.' );
 		}
 
 		$category_id = absint( $_POST['category_id'] );
 		if ( ! $category_id ) {
-			$suggestion = RAVN_Known_Cookies::match_cookie_name( $detected->cookie_name );
+			$suggestion = RAVN_CC_Known_Cookies::match_cookie_name( $detected->cookie_name );
 			$slug       = $suggestion ? $suggestion['category'] : 'analytics';
-			$category   = RAVN_DB::get_category_by_slug( $slug );
+			$category   = RAVN_CC_DB::get_category_by_slug( $slug );
 			$category_id = $category ? $category->id : 0;
 		}
 
-		RAVN_DB::insert_cookie(
+		RAVN_CC_DB::insert_cookie(
 			array(
 				'category_id' => $category_id,
 				'cookie_name' => sanitize_text_field( $_POST['cookie_name'] ),
@@ -227,7 +227,7 @@ class RAVN_Admin {
 				'is_active'   => 1,
 			)
 		);
-		RAVN_DB::set_detected_cookie_status( $id, 'added' );
+		RAVN_CC_DB::set_detected_cookie_status( $id, 'added' );
 
 		wp_safe_redirect( admin_url( 'admin.php?page=ravn-settings&tab=scan&added=1' ) );
 		exit;
@@ -240,7 +240,7 @@ class RAVN_Admin {
 		check_admin_referer( 'ravn_dismiss_detected_cookie' );
 
 		$id = isset( $_POST['detected_id'] ) ? absint( $_POST['detected_id'] ) : 0;
-		RAVN_DB::set_detected_cookie_status( $id, 'ignored' );
+		RAVN_CC_DB::set_detected_cookie_status( $id, 'ignored' );
 
 		wp_safe_redirect( admin_url( 'admin.php?page=ravn-settings&tab=scan&dismissed=1' ) );
 		exit;
@@ -288,6 +288,6 @@ class RAVN_Admin {
 			return;
 		}
 		$tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'categories';
-		require RAVN_PLUGIN_DIR . 'admin/settings-page.php';
+		require RAVN_CC_PLUGIN_DIR . 'admin/settings-page.php';
 	}
 }

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class RAVN_Frontend {
+class RAVN_CC_Frontend {
 
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
@@ -123,9 +123,9 @@ class RAVN_Frontend {
 	 * Werkt los van de banner-JS zodat hij ook zonder JavaScript leesbaar is.
 	 */
 	public function render_cookieverklaring_shortcode() {
-		wp_enqueue_style( 'ravn-banner', RAVN_PLUGIN_URL . 'assets/css/banner.css', array(), RAVN_VERSION );
+		wp_enqueue_style( 'ravn-banner', RAVN_CC_PLUGIN_URL . 'assets/css/banner.css', array(), RAVN_CC_VERSION );
 
-		$grouped = RAVN_DB::get_all_cookies_grouped();
+		$grouped = RAVN_CC_DB::get_all_cookies_grouped();
 		if ( empty( $grouped ) ) {
 			return '<p>' . esc_html__( 'Er zijn nog geen cookies geregistreerd.', 'ravn' ) . '</p>';
 		}
@@ -190,8 +190,8 @@ class RAVN_Frontend {
 	}
 
 	public function enqueue_assets() {
-		wp_enqueue_style( 'ravn-banner', RAVN_PLUGIN_URL . 'assets/css/banner.css', array(), RAVN_VERSION );
-		wp_enqueue_script( 'ravn-banner', RAVN_PLUGIN_URL . 'assets/js/banner.js', array(), RAVN_VERSION, true );
+		wp_enqueue_style( 'ravn-banner', RAVN_CC_PLUGIN_URL . 'assets/css/banner.css', array(), RAVN_CC_VERSION );
+		wp_enqueue_script( 'ravn-banner', RAVN_CC_PLUGIN_URL . 'assets/js/banner.js', array(), RAVN_CC_VERSION, true );
 
 		$data = array(
 			'categories'    => $this->get_categories_for_js(),
@@ -203,7 +203,7 @@ class RAVN_Frontend {
 		wp_localize_script( 'ravn-banner', 'ravnData', $data );
 
 		if ( get_option( 'ravn_live_scan_enabled' ) ) {
-			wp_enqueue_script( 'ravn-scanner', RAVN_PLUGIN_URL . 'assets/js/scanner.js', array(), RAVN_VERSION, true );
+			wp_enqueue_script( 'ravn-scanner', RAVN_CC_PLUGIN_URL . 'assets/js/scanner.js', array(), RAVN_CC_VERSION, true );
 			wp_localize_script(
 				'ravn-scanner',
 				'ravnScanData',
@@ -234,7 +234,7 @@ class RAVN_Frontend {
 	 * om per categorie te tonen en scripts te blokkeren/vrij te geven.
 	 */
 	private function get_categories_for_js() {
-		$grouped = RAVN_DB::get_all_cookies_grouped();
+		$grouped = RAVN_CC_DB::get_all_cookies_grouped();
 		$output  = array();
 
 		foreach ( $grouped as $group ) {
@@ -283,7 +283,7 @@ class RAVN_Frontend {
 		$categories = array_map( 'sanitize_text_field', $categories );
 
 		$visitor_hash = hash( 'sha256', ( $_SERVER['REMOTE_ADDR'] ?? '' ) . ( $_SERVER['HTTP_USER_AGENT'] ?? '' ) . wp_salt() );
-		RAVN_DB::log_consent( $visitor_hash, $categories );
+		RAVN_CC_DB::log_consent( $visitor_hash, $categories );
 
 		wp_send_json_success();
 	}
@@ -307,8 +307,8 @@ class RAVN_Frontend {
 		}
 		$names = array_slice( array_map( 'sanitize_text_field', $names ), 0, 30 ); // bescheiden limiet per verzoek
 
-		require_once RAVN_PLUGIN_DIR . 'includes/class-ravn-scanner.php';
-		$new_count = RAVN_Scanner::register_live_detected_cookies( $names );
+		require_once RAVN_CC_PLUGIN_DIR . 'includes/class-ravn-scanner.php';
+		$new_count = RAVN_CC_Scanner::register_live_detected_cookies( $names );
 
 		wp_send_json_success( array( 'new' => $new_count ) );
 	}

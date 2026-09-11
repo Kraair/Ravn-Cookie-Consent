@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class RAVN_Scanner {
+class RAVN_CC_Scanner {
 
 	const MAX_PAGES_PER_SCAN = 12;
 
@@ -74,7 +74,7 @@ class RAVN_Scanner {
 	 */
 	private static function scan_html_for_signatures( $html ) {
 		$new_count  = 0;
-		$signatures = RAVN_Known_Cookies::script_signatures();
+		$signatures = RAVN_CC_Known_Cookies::script_signatures();
 
 		foreach ( $signatures as $sig ) {
 			if ( false === strpos( $html, $sig['match'] ) ) {
@@ -87,7 +87,7 @@ class RAVN_Scanner {
 			}
 
 			foreach ( $sig['cookies'] as $cookie_pattern ) {
-				$inserted = RAVN_DB::upsert_detected_cookie( $cookie_pattern, 'scan', $sig['label'] );
+				$inserted = RAVN_CC_DB::upsert_detected_cookie( $cookie_pattern, 'scan', $sig['label'] );
 				if ( $inserted ) {
 					$new_count++;
 				}
@@ -110,7 +110,7 @@ class RAVN_Scanner {
 			if ( '' === $name || in_array( $name, $ignored, true ) ) {
 				continue;
 			}
-			$inserted = RAVN_DB::upsert_detected_cookie( $name, 'live', null );
+			$inserted = RAVN_CC_DB::upsert_detected_cookie( $name, 'live', null );
 			if ( $inserted ) {
 				$new_count++;
 			}

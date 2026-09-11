@@ -235,6 +235,20 @@
 	}
 
 	/**
+	 * Zet de toggles in een voorkeurenpaneel gelijk aan een gegeven keuze,
+	 * zodat het paneel nooit een verouderde stand toont (bijvoorbeeld na
+	 * "Alles accepteren" in de banner, zonder dat de modal geopend was).
+	 */
+	function syncOverlayToggles( overlay, choices ) {
+		overlay.querySelectorAll( '[data-ravn-category-toggle]' ).forEach( function ( input ) {
+			var cat = input.getAttribute( 'data-ravn-category-toggle' );
+			if ( choices.hasOwnProperty( cat ) ) {
+				input.checked = !! choices[ cat ];
+			}
+		} );
+	}
+
+	/**
 	 * Slaat een keuze definitief op: cookie wegschrijven, scripts activeren,
 	 * Consent Mode bijwerken en serverside loggen. Gedeeld door zowel de
 	 * eerste-bezoek-flow als het later heropenen van de voorkeuren.
@@ -272,6 +286,7 @@
 
 		function finish( choices ) {
 			finalizeConsent( choices );
+			syncOverlayToggles( overlay, choices );
 			banner.classList.remove( 'ravn-visible' );
 			overlay.classList.remove( 'ravn-visible' );
 		}
@@ -312,6 +327,7 @@
 	window.ravnOpenPreferences = function () {
 		var overlay = document.querySelector( '.ravn-overlay' );
 		if ( overlay ) {
+			syncOverlayToggles( overlay, readConsentCookie() || {} );
 			overlay.classList.add( 'ravn-visible' );
 			return;
 		}

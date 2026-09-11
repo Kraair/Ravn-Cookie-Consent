@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Alles rondom database: aanmaken tabellen en CRUD-helpers.
  */
-class RAVN_DB {
+class RAVN_CC_DB {
 
 	public static function table_categories() {
 		global $wpdb;

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$categories = RAVN_DB::get_categories();
+$categories = RAVN_CC_DB::get_categories();
 $settings   = wp_parse_args(
 	get_option( 'ravn_settings', array() ),
 	array(
@@ -30,7 +30,7 @@ $settings   = wp_parse_args(
 		<a href="?page=ravn-settings&tab=integrations" class="nav-tab <?php echo $tab === 'integrations' ? 'nav-tab-active' : ''; ?>">Integraties</a>
 		<a href="?page=ravn-settings&tab=scan" class="nav-tab <?php echo $tab === 'scan' ? 'nav-tab-active' : ''; ?>">
 			Scan
-			<?php $new_count = RAVN_DB::count_new_detected_cookies(); ?>
+			<?php $new_count = RAVN_CC_DB::count_new_detected_cookies(); ?>
 			<?php if ( $new_count > 0 ) : ?><span class="ravn-badge ravn-badge-count"><?php echo intval( $new_count ); ?></span><?php endif; ?>
 		</a>
 		<a href="?page=ravn-settings&tab=privacy" class="nav-tab <?php echo $tab === 'privacy' ? 'nav-tab-active' : ''; ?>">Privacy &amp; bewaartermijn</a>
@@ -128,7 +128,7 @@ $settings   = wp_parse_args(
 		<h2>Geregistreerde cookies</h2>
 		<?php foreach ( $categories as $cat ) : ?>
 			<h3><?php echo esc_html( $cat->name ); ?></h3>
-			<?php $cookies = RAVN_DB::get_cookies_by_category( $cat->id ); ?>
+			<?php $cookies = RAVN_CC_DB::get_cookies_by_category( $cat->id ); ?>
 			<?php if ( empty( $cookies ) ) : ?>
 				<p><em>Nog geen cookies geregistreerd in deze categorie.</em></p>
 			<?php else : ?>
@@ -292,7 +292,7 @@ $settings   = wp_parse_args(
 	<?php elseif ( 'scan' === $tab ) :
 		$live_enabled = (bool) get_option( 'ravn_live_scan_enabled' );
 		$last_scan    = get_option( 'ravn_last_scan' );
-		$detected     = RAVN_DB::get_detected_cookies( 'new' );
+		$detected     = RAVN_CC_DB::get_detected_cookies( 'new' );
 		?>
 
 		<h2>Handmatige scan</h2>
@@ -334,7 +334,7 @@ $settings   = wp_parse_args(
 			<p><em>Nog niets gevonden. Voer een scan uit of zet live detectie aan.</em></p>
 		<?php else : ?>
 			<?php foreach ( $detected as $item ) :
-				$suggestion = RAVN_Known_Cookies::match_cookie_name( $item->cookie_name );
+				$suggestion = RAVN_CC_Known_Cookies::match_cookie_name( $item->cookie_name );
 				$sugg_provider = $suggestion ? $suggestion['provider'] : ( $item->detected_via ?: '' );
 				$sugg_purpose  = $suggestion ? $suggestion['purpose'] : '';
 				$sugg_duration = $suggestion ? $suggestion['duration'] : '';
