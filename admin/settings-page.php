@@ -23,18 +23,21 @@ $settings   = wp_parse_args(
 		<div class="notice notice-success is-dismissible"><p>Opgeslagen.</p></div>
 	<?php endif; ?>
 
-	<h2 class="nav-tab-wrapper">
-		<a href="?page=ravn-settings&tab=categories" class="nav-tab <?php echo $tab === 'categories' ? 'nav-tab-active' : ''; ?>">Categorieën</a>
-		<a href="?page=ravn-settings&tab=cookies" class="nav-tab <?php echo $tab === 'cookies' ? 'nav-tab-active' : ''; ?>">Cookies</a>
-		<a href="?page=ravn-settings&tab=design" class="nav-tab <?php echo $tab === 'design' ? 'nav-tab-active' : ''; ?>">Popup &amp; teksten</a>
-		<a href="?page=ravn-settings&tab=integrations" class="nav-tab <?php echo $tab === 'integrations' ? 'nav-tab-active' : ''; ?>">Integraties</a>
-		<a href="?page=ravn-settings&tab=scan" class="nav-tab <?php echo $tab === 'scan' ? 'nav-tab-active' : ''; ?>">
-			Scan
-			<?php $new_count = RAVN_CC_DB::count_new_detected_cookies(); ?>
-			<?php if ( $new_count > 0 ) : ?><span class="ravn-badge ravn-badge-count"><?php echo intval( $new_count ); ?></span><?php endif; ?>
-		</a>
-		<a href="?page=ravn-settings&tab=privacy" class="nav-tab <?php echo $tab === 'privacy' ? 'nav-tab-active' : ''; ?>">Privacy &amp; bewaartermijn</a>
-	</h2>
+	<div class="ravn-layout">
+		<nav class="ravn-sidebar">
+			<a href="?page=ravn-settings&tab=categories" class="ravn-sidebar__item <?php echo $tab === 'categories' ? 'is-active' : ''; ?>">Categorieën</a>
+			<a href="?page=ravn-settings&tab=cookies" class="ravn-sidebar__item <?php echo $tab === 'cookies' ? 'is-active' : ''; ?>">Cookies</a>
+			<a href="?page=ravn-settings&tab=design" class="ravn-sidebar__item <?php echo $tab === 'design' ? 'is-active' : ''; ?>">Popup &amp; teksten</a>
+			<a href="?page=ravn-settings&tab=integrations" class="ravn-sidebar__item <?php echo $tab === 'integrations' ? 'is-active' : ''; ?>">Integraties</a>
+			<a href="?page=ravn-settings&tab=scan" class="ravn-sidebar__item <?php echo $tab === 'scan' ? 'is-active' : ''; ?>">
+				Scan
+				<?php $new_count = RAVN_CC_DB::count_new_detected_cookies(); ?>
+				<?php if ( $new_count > 0 ) : ?><span class="ravn-badge ravn-badge-count"><?php echo intval( $new_count ); ?></span><?php endif; ?>
+			</a>
+			<a href="?page=ravn-settings&tab=privacy" class="ravn-sidebar__item <?php echo $tab === 'privacy' ? 'is-active' : ''; ?>">Privacy &amp; bewaartermijn</a>
+		</nav>
+
+		<div class="ravn-content">
 
 	<?php if ( 'categories' === $tab ) : ?>
 
@@ -430,4 +433,7 @@ $settings   = wp_parse_args(
 		</form>
 
 	<?php endif; ?>
+
+		</div>
+	</div>
 </div>
