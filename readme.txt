@@ -12,6 +12,10 @@ Cookiemelding met categorieën, cookie-registratie, voorkeuren-popup en tracking
 
 == Description ==
 
+⚠️ Nog in ontwikkeling. Deze plugin is niet af en niet getest voor productiegebruik. Gebruik op een
+live site is op eigen risico; instellingen, database-structuur en functienamen kunnen nog wijzigen
+zonder migratiepad.
+
 Ravn Cookie Consent is een cookiemeldingsplugin voor WordPress, gericht op AVG-conforme toestemming
 voor Nederlandse websites. De plugin toont een cookiebanner met categorieën, houdt bij welke cookies
 op de website gezet worden en integreert met Google Consent Mode v2 zodat trackingscripts pas
